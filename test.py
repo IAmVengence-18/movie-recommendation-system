@@ -1,16 +1,27 @@
+import pickle
+import streamlit as st
 import httpx
+import time
 
-api_key = "b35242cb2e4677d8a1416b5b68f9bac0"
+api_key = 'b35242cb2e4677d8a1416b5b68f9bac0'
 
-movie_id = 68721   # Iron Man 3
+movies = pickle.load(open('movie_data.pkl', 'rb'))
+similarity = pickle.load(open('similarity_cv.pkl', 'rb'))
 
-url = f"https://api.themoviedb.org/3/movie/{movie_id}?api_key={api_key}"
+print(', '.join(movies.iloc[0]['genre_names']))
+# import httpx
 
-response = httpx.get(url)
+# api_key = "b35242cb2e4677d8a1416b5b68f9bac0"
 
-print(response.status_code)
+# movie_id = 68721   # Iron Man 3
 
-data = response.json()
+# url = f"https://api.themoviedb.org/3/movie/{movie_id}?api_key={api_key}"
 
-print(data["original_title"])
-print(data["poster_path"])
+# response = httpx.get(url)
+
+# print(response.status_code)
+
+# data = response.json()
+
+# print(data["original_title"])
+# print(data["poster_path"])
