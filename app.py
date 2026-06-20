@@ -19,10 +19,10 @@ img {
 </style>
 """, unsafe_allow_html=True)
 
-api_key = 'b35242cb2e4677d8a1416b5b68f9bac0'
+api_key = st.secrets["TMDB_API_KEY"]
 
-movies = pickle.load(open('movie_data.pkl', 'rb'))
-similarity = pickle.load(open('similarity_cv.pkl', 'rb'))
+movies = pickle.load(open('movie_data_deploy.pkl', 'rb'))
+similarity = pickle.load(open('similarity_float16.pkl', 'rb'))
 
 st.title("MOVIE RECOMMENDER SYSTEM")
 selected_movie=st.selectbox('Select a movie',movies['title'].values)
