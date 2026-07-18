@@ -21,12 +21,33 @@ img {
 
 api_key = st.secrets["TMDB_API_KEY"]
 
-movies = pickle.load(open('movie_data_deploy.pkl', 'rb'))
+movies = pickle.load(open('movie_data.pkl', 'rb'))
 similarity = pickle.load(open('similarity_float16.pkl', 'rb'))
 
 st.title("MOVIE RECOMMENDER SYSTEM")
 selected_movie=st.selectbox('Select a movie',movies['title'].values)
 myButton=st.button('Recommend')
+
+def format_runtime(runtime):
+    if runtime:
+        return f"{int(runtime)} minutes"
+    return "N/A"
+
+def format_budget(budget):
+    if budget:
+        return f"${budget/1000000:.2f}M"
+    return "N/A"
+
+def format_revenue(revenue):
+    if revenue:
+        return f"${revenue/1000000:.2f}M"
+    return "N/A"
+
+def format_companies(companies):
+    if not companies:
+        return "N/A"
+
+    return "\n".join(company['name'] for company in companies)
 
 def recommend(movie):
     movie_index=movies[movies['title']==movie].index[0]
@@ -40,7 +61,11 @@ def recommend(movie):
                                    'year': movies.iloc[i[0]].year,
                                    'director': movies.iloc[i[0]].director,
                                    'overview': movies.iloc[i[0]].overview,
-                                   'genre_names': movies.iloc[i[0]].genre_names
+                                   'genre_names': movies.iloc[i[0]].genre_names,
+                                   'runtime': movies.iloc[i[0]].runtime,
+                                   'budget': movies.iloc[i[0]].budget,
+                                   'revenue': movies.iloc[i[0]].revenue,
+                                   'production_companies': movies.iloc[i[0]].production_companies
                                    })
     return recommended_movies
 
@@ -88,13 +113,18 @@ if myButton:
                 st.write(f" ⭐ {movie['vote_average']}")
                 st.caption(f"📅 {int(movie['year'])}")
                 st.caption(f"🎬 {re.sub(r'(?<!^)([A-Z])', r' \1', movie['director'])}")
+                st.divider()
                 st.write(f"🎭 {', '.join(movie['genre_names'])}")
+                st.divider()
+                st.write(f"⏱️Runtime: {format_runtime(movie['runtime'])}")
+                st.write(f"💰 Budget: {format_budget(movie['budget'])}")
+                st.write(f"💸 Revenue: {format_revenue(movie['revenue'])}")
+                st.divider()
+                st.write("🏢 **Production Companies:**")
+                for company in movie["production_companies"]:
+                    st.write(f"• {company['name']}")
                 with st.expander("Overview"):
+                    st.write("");
                     st.write(movie["overview"]) 
             time.sleep(1)
 
-# col1,col2 = st.columns(2)
-# with col1:
-#     st.write("This is column 1")
-# with col2:
-#     st.write("This is column 2")
