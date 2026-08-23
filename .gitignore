@@ -3,3 +3,5 @@ movie_data.pkl
 .streamlit/
 __pycache__/
 *.pyc
+.env
+.venv/
