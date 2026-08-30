@@ -1,15 +1,25 @@
-import pickle
-import streamlit as st
+import os
 import httpx
-import time
-import re
-api_key = st.secrets["TMDB_API_KEY"]
 
-movie = pickle.load(open('movie_data.pkl', 'rb'))
-similarity = pickle.load(open('similarity_float16.pkl', 'rb'))
+url = "https://3.175.86.103/3/discover/movie"
 
-print(type(movie["production_companies"]))
-print(movie["production_companies"])
+params = {
+    "api_key": os.getenv("TMDB_API_KEY"),
+    "page": 1,
+    "vote_count.gte": 1000
+}
 
-print(type(movie["production_companies"][0]))
-print(movie["production_companies"][0]) 
+headers = {
+    "Host": "api.themoviedb.org"
+}
+
+response = httpx.get(
+    url,
+    params=params,
+    headers=headers,
+    timeout=20,
+    verify=True
+)
+
+print(response.status_code)
+print(response.text[:500])
